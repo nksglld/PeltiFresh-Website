@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeltiFresh | Select Log In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="page-center">
+  <main class="select-card">
+    <div class="brand">Pelti<span>Fresh</span></div>
+
+    <div class="select-actions">
+      <p class="select-label">Select Log In:</p>
+      <a class="btn btn-light" href="{{ url_for('login_admin') }}">Admin</a>
+      <a class="btn btn-outline" href="{{ url_for('login_user') }}">User</a>
+    </div>
+  </main>
+</body>
+</html>
