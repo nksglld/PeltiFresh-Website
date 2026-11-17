@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeltiFresh | Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand brand-sm">Pelti<span>Fresh</span></div>
+    <a class="topbar-link" href="{{ url_for('select_login') }}">Back to Login</a>
+  </header>
+
+  <main class="signup-wrap">
+    <section class="signup-card">
+      <h1 class="signup-title">Create Account</h1>
+
+      <form class="signup-form" method="post" action="{{ url_for('register') }}">
+        <label class="visually-hidden" for="username">Account name</label>
+        <input class="field field-lg" type="text" id="username" name="username"
+               placeholder="Account name" autocomplete="username" required>
+
+        <label class="visually-hidden" for="email">Gmail</label>
+        <input class="field field-lg" type="email" id="email" name="email"
+               placeholder="Gmail" autocomplete="email" required>
+
+        <label class="visually-hidden" for="password">Password</label>
+        <input class="field field-lg" type="password" id="password" name="password"
+               placeholder="Password" autocomplete="new-password" minlength="8" required>
+
+        <label class="visually-hidden" for="confirm">Confirm password</label>
+        <input class="field field-lg" type="password" id="confirm" name="confirm"
+               placeholder="Confirm Password" autocomplete="new-password" required>
+
+        <p class="signup-note">
+          Already have an account?
+          <a class="link-strong" href="{{ url_for('select_login') }}">Log in</a>
+        </p>
+
+        <button class="btn btn-green btn-signup" type="submit">Sign up</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

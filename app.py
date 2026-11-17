@@ -18,9 +18,11 @@ def login_user():
         pass  # real login check comes later
     return render_template("login.html", role="user")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return "Sign-up page (coming next)"
+    if request.method == "POST":
+        pass  # saving the account to the database comes later
+    return render_template("register.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
