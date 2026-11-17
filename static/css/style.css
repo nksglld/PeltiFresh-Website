@@ -189,7 +189,7 @@ body {
   background: var(--user-button);
   border-bottom: 1px solid var(--border);
 }
-.brand-sm { font-size: 30px; }
+.brand-sm { font-size: 30px; padding-left: 50px; padding-bottom: 20px; }
 .topbar-link {
   color: var(--other-text);
   text-decoration: none;
