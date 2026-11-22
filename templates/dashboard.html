@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeltiFresh | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="app-body">
+  <div class="app">
+
+    <header class="app-header">
+      <div class="brand brand-sm">Pelti<span>Fresh</span></div>
+      <div class="header-actions">
+        <span class="avatar" aria-hidden="true"></span>
+        <a class="btn-logout" href="{{ url_for('select_login') }}">LOG OUT</a>
+      </div>
+    </header>
+
+    <p class="welcome">Welcome, {{ username }}</p>
+
+    <nav class="tabs">
+      <a class="tab tab-active" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a class="tab" href="{{ url_for('batches') }}">Batches</a>
+      <span class="last-updated">Last updated: <span id="last-updated">{{ last_updated }}</span></span>
+    </nav>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Temperature</h2>
+        <span class="storage-status">
+          Storage Status:
+          {% if door_open %}<span class="bad">Open</span>{% else %}<span class="ok">Closed</span>{% endif %}
+        </span>
+      </div>
+
+      <div class="temp-layout">
+        <div class="temp-side">
+          <div class="mini-box">
+            <p class="mini-title">Current Temperature</p>
+            <p class="mini-value" id="temp-value">{{ temp }} °C</p>
+          </div>
+          <div class="mini-box">
+            <p class="mini-title">Target range: {{ temp_min }} to {{ temp_max }} °C</p>
+            <p class="mini-sub">Status: <span id="temp-status">{{ temp_status }}</span></p>
+          </div>
+        </div>
+
+        <div class="chart-box">
+          <p class="mini-title">Temperature chart area</p>
+          <canvas id="tempChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Batches</h2></div>
+      <div class="batch-row">
+        {% for b in batches %}
+        <article class="batch-card" id="batch-{{ loop.index }}">
+          <h3>{{ b.name }}</h3>
+          <p class="batch-status {{ 'present' if b.present else 'empty' }}">
+            {{ 'Present' if b.present else 'Empty' }}
+          </p>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Batch Log</h2></div>
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>Time &amp; Date</th>
+            <th>Batch #</th>
+            <th>Weight (Last Update)</th>
+            <th>Weight (Latest Update)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in log %}
+          <tr>
+            <td>{{ row.time }}</td>
+            <td>{{ row.batch }}</td>
+            <td>{{ row.last }}</td>
+            <td>{{ row.latest }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" class="empty-row">No records yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</body>
+</html>
