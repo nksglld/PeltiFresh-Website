@@ -1,4 +1,12 @@
-from flask import Flask, render_template, request
+import csv, io
+from flask import Flask, render_template, request, Response
+
+BATCHES = [
+    {"id": "B-001", "mangos": 5, "date_in": "2026-11-20", "days": 3,
+     "previous": "1500 g", "current": "1470 g", "loss": "2.0%"},
+    {"id": "B-002", "mangos": 5, "date_in": "2026-11-22", "days": 1,
+     "previous": "1450 g", "current": "1445 g", "loss": "0.3%"},
+]
 
 app = Flask(__name__)
 
@@ -47,3 +55,29 @@ def batches():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+@app.route("/batches")
+def batches():
+    q = request.args.get("q", "").strip().lower()
+    rows = [b for b in BATCHES if q in b["id"].lower()]
+    return render_template(
+        "batches.html",
+        username="User", last_updated="--", active="batches",
+        batch_list=rows, q=q,
+    )
+
+@app.route("/batches/export")
+def export_csv():
+    out = io.StringIO()
+    writer = csv.writer(out)
+    writer.writerow(["Batch ID", "# of Mangos", "Date In", "Days",
+                     "Previous Weight", "Current Weight", "Loss %"])
+    for b in BATCHES:
+        writer.writerow([b["id"], b["mangos"], b["date_in"], b["days"],
+                         b["previous"], b["current"], b["loss"]])
+    return Response(
+        out.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=batches.csv"},
+    )
