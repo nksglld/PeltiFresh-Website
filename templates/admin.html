@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeltiFresh | Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="app-body">
+  <div class="app">
+
+    <header class="app-header">
+      <div class="brand brand-sm">Pelti<span>Fresh</span></div>
+      <div class="header-actions">
+        <a class="btn-logout" href="{{ url_for('select_login') }}">LOG OUT</a>
+        <span class="avatar" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <p class="welcome">Welcome, Admin</p>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>User Management</h2>
+      </div>
+
+      <div class="table-scroll">
+        <table class="grid-table admin-table">
+          <thead>
+            <tr>
+              <th>Account Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+            <tr>
+              <td>{{ u.name }}</td>
+              <td>{{ u.email }}</td>
+              <td>
+                <span class="{{ 'ok' if u.active else 'bad' }}">
+                  {{ 'Active' if u.active else 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <div class="action-stack">
+                  <form method="post" action="{{ url_for('admin_reset_user', user_id=u.id) }}">
+                    <button class="btn-pill" type="submit">Reset Password</button>
+                  </form>
+                  <form method="post" action="{{ url_for('admin_delete_user', user_id=u.id) }}">
+                    <button class="btn-pill btn-pill-danger" type="submit">Delete Account</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" class="empty-row">No user accounts found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <form method="post" action="{{ url_for('admin') }}">
+      <section class="card settings-card">
+        <h2 class="settings-title">Threshold Settings</h2>
+        <p class="settings-sub">Configure temperature targets, hysteresis control, and safety alerts.</p>
+
+        <div class="setting-group">
+          <h3 class="group-label">Temperature Limits</h3>
+          <div class="split-box">
+            <div class="split-cell">
+              <label for="temp_min">Target Minimum (°C)</label>
+              <input class="pill-input" type="number" step="0.1" id="temp_min" name="temp_min"
+                     value="{{ settings.temp_min }}" required>
+            </div>
+            <div class="split-cell">
+              <label for="temp_max">Target Maximum (°C)</label>
+              <input class="pill-input" type="number" step="0.1" id="temp_max" name="temp_max"
+                     value="{{ settings.temp_max }}" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3 class="group-label">Cooling Band (Hysteresis Control)</h3>
+          <div class="split-box">
+            <div class="split-cell">
+              <label for="cool_on">Cooling ON above (°C)</label>
+              <input class="pill-input" type="number" step="0.1" id="cool_on" name="cool_on"
+                     value="{{ settings.cool_on }}" required>
+            </div>
+            <div class="split-cell">
+              <label for="cool_off">Cooling OFF below (°C)</label>
+              <input class="pill-input" type="number" step="0.1" id="cool_off" name="cool_off"
+                     value="{{ settings.cool_off }}" required>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="save-wrap">
+        <div class="save-block">
+          <button class="btn-save" type="submit">Save Settings</button>
+          <p class="last-saved">Last saved: {{ settings.last_saved }}</p>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</body>
+</html>

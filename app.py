@@ -1,5 +1,7 @@
-import csv, io
-from flask import Flask, render_template, request, Response
+import csv
+import io
+from datetime import datetime
+from flask import Flask, render_template, request, Response, redirect, url_for
 
 BATCHES = [
     {"id": "B-001", "mangos": 5, "date_in": "2026-11-20", "days": 3,
@@ -7,6 +9,19 @@ BATCHES = [
     {"id": "B-002", "mangos": 5, "date_in": "2026-11-22", "days": 1,
      "previous": "1450 g", "current": "1445 g", "loss": "0.3%"},
 ]
+
+USERS = [
+    {"id": 1, "name": "Juan Dela Cruz", "email": "juan@peltifresh.local", "active": True},
+    {"id": 2, "name": "Maria Santos", "email": "maria@peltifresh.local", "active": False},
+]
+
+SETTINGS = {
+    "temp_min": 10.0,
+    "temp_max": 13.0,
+    "cool_on": 13.0,
+    "cool_off": 10.5,
+    "last_saved": "--/--",
+}
 
 app = Flask(__name__)
 
@@ -49,13 +64,28 @@ def dashboard():
         log=[],
     )
 
-@app.route("/batches")
-def batches():
-    return "Batches page (coming next)"
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method == "POST":
+        SETTINGS["temp_min"] = request.form.get("temp_min", SETTINGS["temp_min"])
+        SETTINGS["temp_max"] = request.form.get("temp_max", SETTINGS["temp_max"])
+        SETTINGS["cool_on"] = request.form.get("cool_on", SETTINGS["cool_on"])
+        SETTINGS["cool_off"] = request.form.get("cool_off", SETTINGS["cool_off"])
+        SETTINGS["last_saved"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        return redirect(url_for("admin"))
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    return render_template("admin.html", users=USERS, settings=SETTINGS)
 
+@app.route("/admin/reset/<int:user_id>", methods=["POST"])
+def admin_reset_user(user_id):
+    # Placeholder until SQLite database is connected
+    return redirect(url_for("admin"))
+
+@app.route("/admin/delete/<int:user_id>", methods=["POST"])
+def admin_delete_user(user_id):
+    global USERS
+    USERS = [u for u in USERS if u["id"] != user_id]
+    return redirect(url_for("admin"))
 
 @app.route("/batches")
 def batches():
@@ -63,8 +93,11 @@ def batches():
     rows = [b for b in BATCHES if q in b["id"].lower()]
     return render_template(
         "batches.html",
-        username="User", last_updated="--", active="batches",
-        batch_list=rows, q=q,
+        username="User",
+        last_updated="--",
+        active="batches",
+        batch_list=rows,
+        q=q,
     )
 
 @app.route("/batches/export")
@@ -81,3 +114,8 @@ def export_csv():
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment; filename=batches.csv"},
     )
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+

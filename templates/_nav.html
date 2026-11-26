@@ -1,0 +1,15 @@
+<header class="app-header">
+  <div class="brand brand-sm">Pelti<span>Fresh</span></div>
+  <div class="header-actions">
+    <span class="avatar" aria-hidden="true"></span>
+    <a class="btn-logout" href="{{ url_for('select_login') }}">LOG OUT</a>
+  </div>
+</header>
+
+<p class="welcome">Welcome, {{ username }}</p>
+
+<nav class="tabs">
+  <a class="tab {{ 'tab-active' if active == 'dashboard' }}" href="{{ url_for('dashboard') }}">Dashboard</a>
+  <a class="tab {{ 'tab-active' if active == 'batches' }}" href="{{ url_for('batches') }}">Batches</a>
+  <span class="last-updated">Last updated: <span id="last-updated">{{ last_updated }}</span></span>
+</nav>

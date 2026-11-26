@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeltiFresh | Batches</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="app-body">
+  <div class="app">
+
+    {% include "_nav.html" %}
+
+    <div class="toolbar">
+      <form method="get" action="{{ url_for('batches') }}">
+        <label class="visually-hidden" for="q">Search Batch ID</label>
+        <input class="field search-input" type="search" id="q" name="q"
+               placeholder="Search Batch ID" value="{{ q }}">
+      </form>
+      <a class="btn-export" href="{{ url_for('export_csv') }}">Export CSV</a>
+    </div>
+
+    <section class="table-card">
+      <table class="grid-table">
+        <thead>
+          <tr>
+            <th>Batch ID</th>
+            <th># of Mangos</th>
+            <th>Date In</th>
+            <th>Days</th>
+            <th>Previous<br>Weight</th>
+            <th>Current<br>Weight</th>
+            <th>Loss<br>%</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in batch_list %}
+          <tr>
+            <td>{{ b.id }}</td>
+            <td>{{ b.mangos }}</td>
+            <td>{{ b.date_in }}</td>
+            <td>{{ b.days }}</td>
+            <td>{{ b.previous }}</td>
+            <td>{{ b.current }}</td>
+            <td>{{ b.loss }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="filler-row" aria-hidden="true">
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</body>
+</html>
