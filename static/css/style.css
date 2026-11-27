@@ -751,3 +751,18 @@ body {
     min-height: 380px;
   }
 }
+
+/* Align LOG OUT button flush to the right edge */
+.app-header {
+  width: 100%;
+}
+
+.header-actions {
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .avatar {
+    display: none;
+  }
+}
